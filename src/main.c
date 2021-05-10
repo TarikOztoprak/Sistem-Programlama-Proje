@@ -2,9 +2,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <dirent.h>
 #include "jrb.h"
 #include "fields.h"
 #include "main.h"
@@ -12,17 +9,24 @@
 void kilitOKu()
 {
    IS is;
+   const char *delp;
+   const char *delp2;
    is =  new_inputstruct("./.kilit"); 
    if (is == NULL){ 
      perror("hata"); 
      exit(1);
    }
-   get_line(is);
-   while(get_line(is) > 0)
-     {
-       printf("%s \n" ,is -> fields[0]);
-       printf("%s \n" , is-> fields[1]);
+     
+   while(get_line(is)>0){   
+     delp = strtok(is -> fields[0] ,"\" : { } ; ,");
+     delp2 = strtok(is -> fields[1], "\" : { } ; ,");
+     while(delp != NULL){
+       printf("%s\n" , delp);
+       printf("%s\n" , delp2);
+       delp = strtok(NULL , "\" : { } ; ,");
+       delp2 = strtok(NULL, "\" : { } ; ,");
      }
+   }
    
 }
 
@@ -65,5 +69,3 @@ int main(int argc, char **argv)
   
   return 0;
 }
-
-
