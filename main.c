@@ -2,27 +2,39 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include "jrb.h"
-#include "fields.h"
-#include "main.h"
+#include "jrb.c"
+#include "jval.c"
+#include "fields.c"
 
 void kilitOKu()
 {
    IS is;
+   JRB b;
+   JRB bn;
+
+   b = make_jrb();
+   
+   const char *delp;
+   const char *delp2;
    is =  new_inputstruct("./.kilit"); 
    if (is == NULL){ 
      perror("hata"); 
      exit(1);
    }
-   get_line(is);
-   while(get_line(is) > 0)
-     {
-       printf("%d \n" ,is -> fields[0]);
+     
+   while(get_line(is)>0){   
+     delp = strtok(is -> fields[0] ,"\" : { } ; ,");
+     delp2 = strtok(is -> fields[1], "\" : { } ; ,");
+     while(delp != NULL){
+       jrb_insert_str(b,strdup(delp), new_jval_v(NULL));
+       delp = strtok(NULL , "\" : { } ; ,");
+       delp2 = strtok(NULL, "\" : { } ; ,");
      }
-   
+   }
+
+   jrb_rtraverse(bn, b){
+     printf("%s", bn ->key.s);
+   }
 }
 
 int main(int argc, char **argv)
@@ -64,5 +76,3 @@ int main(int argc, char **argv)
   
   return 0;
 }
-
-
