@@ -1,9 +1,16 @@
+INCLUDE = -I ./libfdr
 CC = gcc
-ALL = odev
-
+ALL = kripto
+LIBS =  libfdr/libfdr.a
 all: $(ALL)
 
 clean:
 	rm -f *.o core $(ALL)
-odev: 
-	$(CC) -g -I ./libfdr -o program ./main.c
+cleanall:
+	rm -f *.o core $(ALL) ./ornek_metin ./encripted ./decripted ./.kilit ./*txt
+kripto: 
+	$(CC) -g $(INCLUDE) -o kripto ./main.c $(LIBS)
+run:
+	$(CC) -g $(INCLUDE) -o kripto ./main.c $(LIBS)
+	./kripto -e ornek_metin encripted
+	./kripto -d encripted decripted
